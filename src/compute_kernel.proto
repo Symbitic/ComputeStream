@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.alexshaw.compute";
+option java_outer_classname = "ComputeProto";
+option objc_class_prefix = "CPT";
+
+package compute;
+
+service Compute {
+  rpc CreateKernel (ComputeKernel) returns (ComputeKernelID) {}
+
+  rpc SetInputData (ComputeInputData) returns (ComputeStatus) {}
+
+  rpc Compute(ComputeKernelID) returns (ComputeStatus) {}
+}
+
+enum DataType {
+  UINT32 = 0;
+  FLOAT = 1;
+}
+
+message ComputeKernel {
+  string source = 1;
+  DataType type = 2;
+  uint64 inputs = 3;
+  repeated uint64 outputs = 4;
+}
+
+message ComputeKernelID {
+  string uuid = 1; // Unique ID
+}
+
+message ComputeInputData {
+  string uuid = 1;
+  uint64 index = 2;
+  uint64 size = 3;
+  repeated uint32 data = 4;
+}
+
+message ComputeStatus {
+  bool success = 1;
+  string message = 2;
+}
